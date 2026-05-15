@@ -1,0 +1,141 @@
+:root {
+  --bg: #f4f5f7;
+  --card-bg: #ffffff;
+  --text: #1f2330;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.task-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#task-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+#task-input:focus {
+  border-color: var(--primary);
+}
+
+#add-btn {
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+#add-btn:hover {
+  background: var(--primary-hover);
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-list:empty::before {
+  content: "No tasks yet — add one above.";
+  display: block;
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fafbfc;
+}
+
+.task-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.delete-btn {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: #fff;
+  background: var(--danger);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.delete-btn:hover {
+  background: var(--danger-hover);
+}
