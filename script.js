@@ -71,7 +71,11 @@
   }
 
   function saveTasks() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    } catch (_err) {
+      // Storage unavailable (quota, private mode); keep in-memory state.
+    }
   }
 
   function newId() {
