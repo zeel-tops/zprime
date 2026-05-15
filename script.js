@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  const STORAGE_KEY = "todo.tasks";
+
   const form = document.getElementById("task-form");
   const input = document.getElementById("task-input");
   const list = document.getElementById("task-list");
@@ -44,31 +46,112 @@
 
   initTheme();
 
-  function addTask(text) {
-    const trimmed = text.trim();
-    if (trimmed === "") {
-      return;
-    }
+  let tasks = loadTasks();
 
+  function loadTasks() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw === null) {
+        return [];
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      return parsed
+        .filter(function (t) {
+          return t && typeof t.id === "string" && typeof t.text === "string";
+        })
+        .map(function (t) {
+          return { id: t.id, text: t.text, completed: t.completed === true };
+        });
+    } catch (_err) {
+      return [];
+    }
+  }
+
+  function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }
+
+  function newId() {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID();
+    }
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  function buildRow(task) {
     const item = document.createElement("li");
-    item.className = "task-item";
+    item.className = "task-item" + (task.completed ? " completed" : "");
+    item.dataset.id = task.id;
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "task-checkbox";
+    checkbox.checked = task.completed;
+    checkbox.setAttribute(
+      "aria-label",
+      (task.completed ? "Mark as not completed: " : "Mark as completed: ") + task.text,
+    );
+    checkbox.addEventListener("change", function () {
+      toggleTask(task.id);
+    });
 
     const span = document.createElement("span");
     span.className = "task-text";
-    span.textContent = trimmed;
+    span.textContent = task.text;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.className = "delete-btn";
     deleteBtn.textContent = "Delete";
-    deleteBtn.setAttribute("aria-label", "Delete task: " + trimmed);
+    deleteBtn.setAttribute("aria-label", "Delete task: " + task.text);
     deleteBtn.addEventListener("click", function () {
-      item.remove();
+      deleteTask(task.id);
     });
 
+    item.appendChild(checkbox);
     item.appendChild(span);
     item.appendChild(deleteBtn);
-    list.appendChild(item);
+    return item;
+  }
+
+  function render() {
+    list.textContent = "";
+    for (const task of tasks) {
+      list.appendChild(buildRow(task));
+    }
+  }
+
+  function addTask(text) {
+    const trimmed = text.trim();
+    if (trimmed === "") {
+      return;
+    }
+    tasks.push({ id: newId(), text: trimmed, completed: false });
+    saveTasks();
+    render();
+  }
+
+  function toggleTask(id) {
+    const task = tasks.find(function (t) {
+      return t.id === id;
+    });
+    if (!task) {
+      return;
+    }
+    task.completed = !task.completed;
+    saveTasks();
+    render();
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(function (t) {
+      return t.id !== id;
+    });
+    saveTasks();
+    render();
   }
 
   form.addEventListener("submit", function (event) {
@@ -77,4 +160,6 @@
     input.value = "";
     input.focus();
   });
+
+  render();
 })();

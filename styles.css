@@ -185,9 +185,27 @@ h1 {
   background: var(--item-bg);
 }
 
+.task-checkbox {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
 .task-text {
   flex: 1;
   word-break: break-word;
+}
+
+.task-item.completed {
+  background: #f3f4f6;
+}
+
+.task-item.completed .task-text {
+  color: var(--muted);
+  text-decoration: line-through;
 }
 
 .delete-btn {
