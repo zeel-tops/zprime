@@ -9,6 +9,23 @@
   --danger: #dc2626;
   --danger-hover: #b91c1c;
   --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --item-bg: #fafbfc;
+  --toggle-hover-bg: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --card-bg: #1a1d24;
+  --text: #e6e8ee;
+  --muted: #9aa3b2;
+  --border: #2a2f3a;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --danger: #ef4444;
+  --danger-hover: #f87171;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --item-bg: #222630;
+  --toggle-hover-bg: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -30,6 +47,9 @@ body {
     Arial,
     sans-serif;
   line-height: 1.5;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 body {
@@ -49,10 +69,46 @@ body {
   padding: 24px;
 }
 
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
 h1 {
-  margin: 0 0 16px;
+  margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--toggle-hover-bg);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .task-form {
@@ -65,10 +121,19 @@ h1 {
   flex: 1;
   padding: 10px 12px;
   font-size: 1rem;
+  color: var(--text);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+#task-input::placeholder {
+  color: var(--muted);
 }
 
 #task-input:focus {
@@ -117,7 +182,7 @@ h1 {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #fafbfc;
+  background: var(--item-bg);
 }
 
 .task-text {
