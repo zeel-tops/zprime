@@ -23,14 +23,28 @@
     themeToggle.setAttribute("aria-pressed", isDark ? "true" : "false");
   }
 
-  function initTheme() {
-    let saved = null;
+  function readSavedTheme() {
     try {
-      saved = localStorage.getItem(THEME_KEY);
+      const saved = localStorage.getItem(THEME_KEY);
+      return saved === THEME_LIGHT || saved === THEME_DARK ? saved : null;
     } catch (_e) {
-      saved = null;
+      return null;
     }
-    applyTheme(saved === THEME_DARK ? THEME_DARK : THEME_LIGHT);
+  }
+
+  function getSystemTheme() {
+    return window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? THEME_DARK
+      : THEME_LIGHT;
+  }
+
+  function resolveTheme() {
+    return readSavedTheme() || getSystemTheme();
+  }
+
+  function initTheme() {
+    applyTheme(resolveTheme());
   }
 
   themeToggle.addEventListener("click", function () {
@@ -43,6 +57,15 @@
       // Ignore: localStorage may be unavailable (e.g. private mode, quota).
     }
   });
+
+  if (window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (event) {
+      // Saved preference always wins; only follow the system when none is set.
+      if (readSavedTheme() === null) {
+        applyTheme(event.matches ? THEME_DARK : THEME_LIGHT);
+      }
+    });
+  }
 
   initTheme();
 
